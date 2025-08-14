@@ -1,0 +1,47 @@
+package daisyui
+
+import (
+	"strings"
+)
+
+type TextAreaColor string
+type TextAreaSize string
+
+const (
+	TextAreaColorNeutral   TextAreaColor = "textarea-neutral"
+	TextAreaColorPrimary   TextAreaColor = "textarea-primary"
+	TextAreaColorSecondary TextAreaColor = "textarea-secondary"
+
+	TextAreaSizeXtraSmall TextAreaSize = "textarea-xs"
+	TextAreaSizeSmall     TextAreaSize = "textarea-sm"
+	TextAreaSizeMedium    TextAreaSize = "textarea-md"
+	TextAreaSizeLarge     TextAreaSize = "textarea-lg"
+	TextAreaSizeXtraLarge TextAreaSize = "textarea-xl"
+)
+
+type TextAreaProps struct {
+	ID       string
+	Class    string
+	Color    TextAreaColor
+	Size     TextAreaSize
+	Type string
+}
+
+func (p TextAreaProps) ClassName() string {
+	classes := []string{"btn"}
+	if p.Color != "" {
+		classes = append(classes, string(p.Color))
+	}
+	if p.Size != "" {
+		classes = append(classes, string(p.Size))
+	}
+
+	if p.Class != "" {
+		classes = append(classes, p.Class)
+	}
+	return strings.Join(classes, " ")
+}
+
+templ TextArea(p TextAreaProps, attrs templ.Attributes) {
+	<textarea id={p.ID} class={p.ClassName()} {attrs...}></textarea>
+}

@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@source "../**/*.templ";
+
+@plugin "./static/daisyui.js";
+
+/* Optional for custom themes – Docs: https://daisyui.com/docs/themes/#how-to-add-a-new-custom-theme */
+@plugin "./static/daisyui-theme.js"{
+  /* custom theme here */
+}
+
+@base {
+   :root {
+      --default-radius: 0.25rem;
+   }
+}
+
+[data-theme='light'] {
+   --nav-bg-color: rgb(70, 67, 67);
+   --nav-submenu-b-color: rgb(87, 84, 84);
+   --nav-text-color: #ffffff;
+   --nav-border-radius: 0.25rem;
+
+   --menu-hover-bg-color: rgb(100, 96, 96);
+   --menu-hover-b-radius: 0.25rem;
+}
+
+.bb {
+    @apply border border-gray-800;
+}
+
+.rx-navbar {
+   background-color: var(--nav-bg-color);
+   color: var(--nav-text-color);
+   border-radius: var(--nav-border-radius);
+}
+
+.rx-submenu {
+   background-color: var(--nav-bg-color);
+   color: var(--nav-text-color);
+   border-radius: var(--nav-border-radius);
+   border: 1px solid var(--nav-submenu-b-color);
+   @apply p-1 z-1;
+}
+
+.rx-menu-item:hover {
+   background-color: var(--menu-hover-bg-color);
+   border-radius: var(--menu-hover-b-radius);
+}
+
+.rx-tab-container {
+   color: black
+}

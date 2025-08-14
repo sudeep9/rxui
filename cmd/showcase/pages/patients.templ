@@ -1,0 +1,81 @@
+package pages
+
+import (
+	"github.com/sudeep9/rxui"
+	"github.com/sudeep9/rxui/components/daisyui"
+	"github.com/sudeep9/rxui/components/icons"
+)
+
+type PatientsPage struct {
+}
+
+templ (p PatientsPage) Nav() {
+    @Navbar() {
+        <div>Logo</div>
+        @NavMenu()
+        <div>Profile</div>
+    }
+}
+
+templ (p PatientsPage) Page() {
+    @Shell("rxui ") {
+		<div>
+            @p.Nav()
+		</div>
+		<div class="p-1 h-full">
+            @p.Content()
+		</div>
+    }
+}
+
+templ (p PatientsPage) Content() {
+    {{
+        tab := daisyui.Tabs{
+            Name:     "patients_content_tab",
+            TabStyle: daisyui.TabStyleLift,
+        }
+    }}
+    @tab.Tabs(rxui.Class("rx-tab-container h-full"), rxui.ID("patientsTab")) {
+        @tab.Tab(true) {
+            List
+        }
+        @tab.TabContent() {
+            @p.List()
+        }
+    }
+
+
+}
+
+templ (p PatientsPage) List() {
+    <table class="table table-zebra table-sm">
+        <thead>
+            <tr>
+                <th>Actions</th>
+                <th>Name</th>
+                <th>DOB</th>
+                <th>Addr</th>
+            </tr>
+        </thead>
+        <tbody>
+            @p.PatientRow("John Wick", "01-Jan-1980", "10 Downing Street")
+            @p.PatientRow("Tony Stark", "10-Mar-1975", "10 Janpath Street")
+            @p.PatientRow("Bruce Wayne", "19-Feb-1975", "1007 Mountain Drive")
+            @p.PatientRow("Clark Kent", "18-Apr-1975", "344 Clinton Street")
+        </tbody>
+    </table>
+}
+
+templ (p PatientsPage) PatientRow(name string, dob string, addr string) {
+    <tr>
+        <td class="flex items-center gap-x-1">
+            <button class="btn btn-square h-4 w-4">
+                @icons.Edit()
+            </button>
+            <input type="checkbox" class="checkbox h-4 w-4" />
+        </td>
+        <td>{name}</td>
+        <td>{dob}</td>
+        <td>{addr}</td>
+    </tr>
+}

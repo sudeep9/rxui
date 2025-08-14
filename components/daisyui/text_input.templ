@@ -1,0 +1,54 @@
+package daisyui
+
+import (
+	"strings"
+)
+
+type TextInputColor string
+type TextInputSize string
+
+const (
+	TextInputColorNeutral   TextInputColor = "input-neutral"
+	TextInputColorPrimary   TextInputColor = "input-primary"
+	TextInputColorSecondary TextInputColor = "input-secondary"
+	TextInputColorError     TextInputColor = "input-error"
+
+	TextInputSizeXtraSmall TextInputSize = "input-xs"
+	TextInputSizeSmall     TextInputSize = "input-sm"
+	TextInputSizeMedium    TextInputSize = "input-md"
+	TextInputSizeLarge     TextInputSize = "input-lg"
+	TextInputSizeXtraLarge TextInputSize = "input-xl"
+)
+
+type TextInputProps struct {
+	ID       string
+	Class    string
+	Color    TextInputColor
+	Size     TextInputSize
+	Type string
+}
+
+func (p TextInputProps) ClassName() string {
+	classes := []string{"btn"}
+	if p.Color != "" {
+		classes = append(classes, string(p.Color))
+	}
+	if p.Size != "" {
+		classes = append(classes, string(p.Size))
+	}
+
+	if p.Class != "" {
+		classes = append(classes, p.Class)
+	}
+	return strings.Join(classes, " ")
+}
+
+templ TextInput(p TextInputProps, attrs templ.Attributes) {
+	{{
+		if p.Type == "" {
+			p.Type = "text"
+		}
+	}}
+
+	<input id={p.ID} type={p.Type} class={p.ClassName()} {attrs...} />
+}

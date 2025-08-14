@@ -1,0 +1,60 @@
+package daisyui
+
+import (
+    "strings"
+	"github.com/sudeep9/rxui"
+)
+
+type TabStyle string 
+
+const (
+    TabStyleLift TabStyle = "tabs-lift"
+    TabStyleBox  TabStyle = "tabs-box"
+    TabStyleLine TabStyle = "tabs-line"
+)
+
+type Tabs struct {
+    Name string
+    TabStyle TabStyle
+}
+
+templ (t Tabs) Tabs(attrlist ...templ.KeyValue[string, any]) {
+    {{
+        classes := []string{"tabs"}
+
+        tabStyle := TabStyleLift
+        if string(t.TabStyle) != "" {
+            tabStyle = t.TabStyle
+            classes = append(classes, string(tabStyle))
+        }
+
+        attrs := rxui.ProcessAttrs(strings.Join(classes, " "), attrlist...)
+    }}
+    <div {attrs...}>
+        {children...}
+    </div>
+}
+
+templ (t Tabs) Tab(isChecked bool, attrlist ...templ.KeyValue[string, any]) {
+    {{
+        attrs := rxui.ProcessAttrs("tab", attrlist...)
+        var inputAttrs templ.OrderedAttributes
+        if isChecked {
+            inputAttrs = append(inputAttrs, rxui.IsChecked())
+        }
+    }}
+    <label {attrs...}>
+        <input type="radio" name={t.Name} {inputAttrs...}/>
+        {children...}
+    </label>
+}
+
+
+templ (t Tabs) TabContent(attrlist ...templ.KeyValue[string, any]) {
+    {{
+        attrs := rxui.ProcessAttrs("tab-content", attrlist...)
+    }}
+    <div {attrs...}>
+        {children...}
+    </div>
+}

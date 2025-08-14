@@ -1,0 +1,37 @@
+package daisyui
+
+import (
+	"strings"
+)
+
+type LabelProps struct {
+	ID       string
+	Class    string
+	Floating bool
+	AsInput  bool
+}
+
+func (p LabelProps) ClassName() string {
+	classes := []string{}
+
+	if p.AsInput {
+		classes = append(classes, "input")
+	}else{
+		classes = append(classes, "label")
+	}
+
+	if p.Floating {
+		classes = append(classes, "floating-label")
+	}
+	if p.Class != "" {
+		classes = append(classes, p.Class)
+	}
+	return strings.Join(classes, " ")
+}
+
+templ Label(p LabelProps, attrs templ.Attributes) {
+	<label id={p.ID} class={p.ClassName()} {attrs...}>
+		{children...}
+	</label>
+}
+

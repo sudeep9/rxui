@@ -1,0 +1,57 @@
+package daisyui
+
+import (
+	"strings"
+)
+
+type BtnColor string
+type BtnSize string
+
+const (
+	BtnColorNeutral   BtnColor = "btn-neutral"
+	BtnColorPrimary   BtnColor = "btn-primary"
+	BtnColorSecondary BtnColor = "btn-secondary"
+
+	BtnSizeXtraSmall BtnSize = "btn-xs"
+	BtnSizeSmall     BtnSize = "btn-sm"
+	BtnSizeMedium    BtnSize = ""
+	BtnSizeLarge     BtnSize = "btn-lg"
+	BtnSizeXtraLarge BtnSize = "btn-xl"
+)
+
+type BtnProps struct {
+	ID       string
+	Class    string
+	Color    BtnColor
+	Size     BtnSize
+	Disabled bool
+	Square   bool
+}
+
+func (p BtnProps) ClassName() string {
+	classes := []string{"btn"}
+	if p.Color != "" {
+		classes = append(classes, string(p.Color))
+	}
+	if p.Size != "" {
+		classes = append(classes, string(p.Size))
+	}
+	if p.Disabled {
+		classes = append(classes, "btn-disabled")
+	}
+	if p.Square {
+		classes = append(classes, "btn-square")
+	}
+
+	if p.Class != "" {
+		classes = append(classes, p.Class)
+	}
+	return strings.Join(classes, " ")
+}
+
+
+templ Button(p BtnProps, attrs templ.Attributes) {
+	<button id={p.ID} class={p.ClassName()} {attrs...}>
+		{children...}
+	</button>
+}

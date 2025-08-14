@@ -1,0 +1,121 @@
+package daisyui
+
+import (
+    "strings"
+    "github.com/sudeep9/rxui"
+)
+
+type MenuSize string
+
+const (
+	MenuSizeXtraSmall MenuSize = "menu-xs"
+	MenuSizeSmall     MenuSize = "menu-sm"
+	MenuSizeMedium    MenuSize = "menu-md"
+	MenuSizeLarge     MenuSize = "menu-lg"
+	MenuSizeXtraLarge MenuSize = "menu-xl"
+)
+
+type MenuProps struct {
+    Horizontal bool
+    Size  MenuSize
+}
+
+templ Menu(p MenuProps, attrlist ...templ.KeyValue[string, any]) {
+    {{
+        classes := []string{"menu"}
+
+        if p.Horizontal {
+            classes = append(classes, "menu-horizontal")
+        }else{
+            classes = append(classes, "menu-vertical")
+        }
+
+        size := string(p.Size)
+
+        if size != "" {
+            classes = append(classes, size)
+        }
+
+        attrs := rxui.ProcessAttrs(strings.Join(classes, " "), attrlist...)
+    }}
+
+
+    <ul {attrs...}>
+        {children...}
+    </ul>
+}
+
+
+templ MenuTitle() {
+    <li class="menu-title">{children...}</li>
+}
+
+
+templ MenuItem(attrlist ...templ.KeyValue[string, any]) {
+    {{
+        attrs := templ.OrderedAttributes(attrlist)
+    }}
+    <li {attrs...}>
+        {children...}
+    </li>
+}
+
+templ DropMenu(attrlist ...templ.KeyValue[string, any]) {
+    {{
+        attrs := rxui.ProcessAttrs("dropdown", attrlist...)
+    }}
+    <li {attrs...}>
+        {children...}
+    </li>
+}
+
+type DropMenuNameProps struct {
+    ID    string
+    Class string
+}
+func (p DropMenuNameProps) ClassName() string {
+    classes := []string{}
+
+    if p.Class != "" {
+        classes = append(classes, p.Class)
+    }
+    if len(classes) == 0 {
+        return ""
+    }
+
+    return strings.Join(classes, " ")
+}
+
+
+templ DropMenuName(attrlist ...templ.KeyValue[string, any]) {
+    {{
+        attrs := templ.OrderedAttributes(attrlist)
+    }}
+    <a tabindex="0" role="button" {attrs...}>{children...}</a>
+}
+
+type DropMenuItemsProps struct {
+    ID    string
+    Class string
+}
+
+func (p DropMenuItemsProps) ClassName() string {
+    classes := []string{"dropdown-content"}
+
+    if p.Class != "" {
+        classes = append(classes, p.Class)
+    }
+    if len(classes) == 0 {
+        return ""
+    }
+    return strings.Join(classes, " ")
+}
+
+templ DropMenuItems(attrlist ...templ.KeyValue[string, any]) {
+    {{
+        attrs := rxui.ProcessAttrs("dropdown-content", attrlist...)
+    }}
+    <ul tabindex="0" {attrs...}>
+        {children...}
+    </ul>
+}

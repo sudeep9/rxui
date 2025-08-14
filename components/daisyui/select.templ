@@ -1,0 +1,49 @@
+package daisyui
+
+import (
+	"strings"
+)
+
+type SelectColor string
+type SelectSize string
+
+const (
+	SelectColorNeutral   SelectColor = "select-neutral"
+	SelectColorPrimary   SelectColor = "select-primary"
+	SelectColorSecondary SelectColor = "select-secondary"
+
+	SelectSizeXtraSmall SelectSize = "select-xs"
+	SelectSizeSmall     SelectSize = "select-sm"
+	SelectSizeMedium    SelectSize = "select-md"
+	SelectSizeLarge     SelectSize = "select-lg"
+	SelectSizeXtraLarge SelectSize = "select-xl"
+)
+
+type SelectProps struct {
+	ID       string
+	Class    string
+	Color    SelectColor
+	Size     SelectSize
+	Type string
+}
+
+func (p SelectProps) ClassName() string {
+	classes := []string{"btn"}
+	if p.Color != "" {
+		classes = append(classes, string(p.Color))
+	}
+	if p.Size != "" {
+		classes = append(classes, string(p.Size))
+	}
+
+	if p.Class != "" {
+		classes = append(classes, p.Class)
+	}
+	return strings.Join(classes, " ")
+}
+
+templ Select(p SelectProps, attrs templ.Attributes) {
+	<select id={p.ID} class={p.ClassName()} {attrs...}>
+		{children...}
+	</select>
+}

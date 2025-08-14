@@ -1,0 +1,30 @@
+version: '3'
+
+env:
+  TEMPL_VER: v0.3.924
+
+tasks:
+   gen:
+      desc: Process templ files
+      cmds:
+         - cd ./components/daisyui && templ generate
+         - cd ./components/icons && templ generate
+         - cd ./cmd/showcase/pages && templ generate
+      sources:
+         - ./components/daisyui/*.templ
+         - ./components/icons/*.templ
+         - ./cmd/showcase/pages/*.templ
+      generates:
+         - ./components/daisyui/*.go
+         - ./components/icons/*.go
+         - ./cmd/showcase/pages/*.go
+
+   tailwind:
+      desc: Generate tailwind css
+      cmds:
+         - tailwindcss -i ./input.css -o ./static/rxui.css --minify
+
+   run:
+      deps: [gen, tailwind]
+      cmds:
+         - go run ./cmd/showcase
