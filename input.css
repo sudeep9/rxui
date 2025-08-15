@@ -7,15 +7,34 @@
 /* Optional for custom themes – Docs: https://daisyui.com/docs/themes/#how-to-add-a-new-custom-theme */
 @plugin "./static/daisyui-theme.js"{
   /* custom theme here */
+  themes: light --default, dark;
 }
 
 @base {
    :root {
       --default-radius: 0.25rem;
+      --nav-bg-color: rgb(70, 67, 67);
+      --nav-submenu-b-color: rgb(87, 84, 84);
+      --nav-text-color: #ffffff;
+      --nav-border-radius: 0.25rem;
+
+      --menu-hover-bg-color: rgb(100, 96, 96);
+      --menu-hover-b-radius: 0.25rem;
    }
+
 }
 
 [data-theme='light'] {
+   --nav-bg-color: rgb(70, 67, 67);
+   --nav-submenu-b-color: rgb(87, 84, 84);
+   --nav-text-color: #ffffff;
+   --nav-border-radius: 0.25rem;
+
+   --menu-hover-bg-color: rgb(100, 96, 96);
+   --menu-hover-b-radius: 0.25rem;
+}
+
+[data-theme='dark'] {
    --nav-bg-color: rgb(70, 67, 67);
    --nav-submenu-b-color: rgb(87, 84, 84);
    --nav-text-color: #ffffff;
@@ -49,5 +68,17 @@
 }
 
 .rx-tab-container {
-   color: black
+   /*color: black*/
+}
+
+.rx-input {
+   @apply rounded-none w-full p-1;
+}
+
+.rx-form td {
+   @apply p-0;
+}
+
+.rx-form th {
+   @apply py-2 px-0;
 }

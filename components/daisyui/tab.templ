@@ -6,16 +6,24 @@ import (
 )
 
 type TabStyle string 
+type TabSize string
 
 const (
     TabStyleLift TabStyle = "tabs-lift"
     TabStyleBox  TabStyle = "tabs-box"
     TabStyleLine TabStyle = "tabs-line"
+
+    TabSizeXtraSmall TabSize = "tabs-xs"
+    TabSizeSmall TabSize = "tabs-sm"
+    TabSizeMedium TabSize = "tabs-md"
+    TabSizeLarge TabSize = "tabs-lg"
+    TabSizeXtraLarge TabSize = "tabs-xl"
 )
 
 type Tabs struct {
     Name string
     TabStyle TabStyle
+    Size TabSize
 }
 
 templ (t Tabs) Tabs(attrlist ...templ.KeyValue[string, any]) {
@@ -28,7 +36,13 @@ templ (t Tabs) Tabs(attrlist ...templ.KeyValue[string, any]) {
             classes = append(classes, string(tabStyle))
         }
 
-        attrs := rxui.ProcessAttrs(strings.Join(classes, " "), attrlist...)
+        tabSize := TabSizeMedium
+        if string(t.Size) != "" {
+            tabSize = t.Size
+            classes = append(classes, string(tabSize))
+        }
+
+        attrs := rxui.MergeClass(strings.Join(classes, " "), attrlist...)
     }}
     <div {attrs...}>
         {children...}
@@ -37,7 +51,7 @@ templ (t Tabs) Tabs(attrlist ...templ.KeyValue[string, any]) {
 
 templ (t Tabs) Tab(isChecked bool, attrlist ...templ.KeyValue[string, any]) {
     {{
-        attrs := rxui.ProcessAttrs("tab", attrlist...)
+        attrs := rxui.MergeClass("tab flex", attrlist...)
         var inputAttrs templ.OrderedAttributes
         if isChecked {
             inputAttrs = append(inputAttrs, rxui.IsChecked())
@@ -52,7 +66,7 @@ templ (t Tabs) Tab(isChecked bool, attrlist ...templ.KeyValue[string, any]) {
 
 templ (t Tabs) TabContent(attrlist ...templ.KeyValue[string, any]) {
     {{
-        attrs := rxui.ProcessAttrs("tab-content", attrlist...)
+        attrs := rxui.MergeClass("tab-content", attrlist...)
     }}
     <div {attrs...}>
         {children...}

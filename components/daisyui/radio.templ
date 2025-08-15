@@ -1,0 +1,43 @@
+package daisyui
+
+import (
+	"strings"
+    "github.com/sudeep9/rxui"
+)
+
+type RadioColor string
+type RadioSize string
+
+const (
+	RadioColorNeutral   RadioColor = "radio-neutral"
+	RadioColorPrimary   RadioColor = "radio-primary"
+	RadioColorSecondary RadioColor = "radio-secondary"
+	RadioColorError     RadioColor = "radio-error"
+
+	RadioSizeXtraSmall RadioSize = "radio-xs"
+	RadioSizeSmall     RadioSize = "radio-sm"
+	RadioSizeMedium    RadioSize = "radio-md"
+	RadioSizeLarge     RadioSize = "radio-lg"
+	RadioSizeXtraLarge RadioSize = "radio-xl"
+)
+
+type RadioProps struct {
+	Color    RadioColor
+	Size     RadioSize
+}
+
+templ Radio(p RadioProps, attrlist ...templ.KeyValue[string, any]) {
+	{{
+		classes := []string{"radio"}
+		if p.Color != "" {
+			classes = append(classes, string(p.Color))
+		}
+		if p.Size != "" {
+			classes = append(classes, string(p.Size))
+		}
+
+		attrs := rxui.MergeClass(strings.Join(classes, " "),  attrlist...)
+	}}
+
+	<input type="radio" {attrs...} />
+}

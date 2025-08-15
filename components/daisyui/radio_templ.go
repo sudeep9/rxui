@@ -13,30 +13,28 @@ import (
 	"strings"
 )
 
-type SelectColor string
-type SelectSize string
+type RadioColor string
+type RadioSize string
 
 const (
-	SelectColorNeutral   SelectColor = "select-neutral"
-	SelectColorGhost     SelectColor = "select-ghost"
-	SelectColorPrimary   SelectColor = "select-primary"
-	SelectColorSecondary SelectColor = "select-secondary"
-	SelectColorInfo      SelectColor = "select-info"
-	SelectColorError     SelectColor = "select-error"
+	RadioColorNeutral   RadioColor = "radio-neutral"
+	RadioColorPrimary   RadioColor = "radio-primary"
+	RadioColorSecondary RadioColor = "radio-secondary"
+	RadioColorError     RadioColor = "radio-error"
 
-	SelectSizeXtraSmall SelectSize = "select-xs"
-	SelectSizeSmall     SelectSize = "select-sm"
-	SelectSizeMedium    SelectSize = "select-md"
-	SelectSizeLarge     SelectSize = "select-lg"
-	SelectSizeXtraLarge SelectSize = "select-xl"
+	RadioSizeXtraSmall RadioSize = "radio-xs"
+	RadioSizeSmall     RadioSize = "radio-sm"
+	RadioSizeMedium    RadioSize = "radio-md"
+	RadioSizeLarge     RadioSize = "radio-lg"
+	RadioSizeXtraLarge RadioSize = "radio-xl"
 )
 
-type SelectProps struct {
-	Color SelectColor
-	Size  SelectSize
+type RadioProps struct {
+	Color RadioColor
+	Size  RadioSize
 }
 
-func Select(p SelectProps, attrlist ...templ.KeyValue[string, any]) templ.Component {
+func Radio(p RadioProps, attrlist ...templ.KeyValue[string, any]) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -58,7 +56,7 @@ func Select(p SelectProps, attrlist ...templ.KeyValue[string, any]) templ.Compon
 		}
 		ctx = templ.ClearChildren(ctx)
 
-		classes := []string{"select"}
+		classes := []string{"radio"}
 		if p.Color != "" {
 			classes = append(classes, string(p.Color))
 		}
@@ -67,7 +65,7 @@ func Select(p SelectProps, attrlist ...templ.KeyValue[string, any]) templ.Compon
 		}
 
 		attrs := rxui.MergeClass(strings.Join(classes, " "), attrlist...)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<select")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<input type=\"radio\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -76,14 +74,6 @@ func Select(p SelectProps, attrlist ...templ.KeyValue[string, any]) templ.Compon
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, ">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templ_7745c5c3_Var1.Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</select>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

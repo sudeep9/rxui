@@ -1,0 +1,40 @@
+package daisyui
+
+import (
+	"strings"
+	"github.com/sudeep9/rxui"
+)
+
+type Modal struct {
+    WithCloseBtn bool
+}
+
+templ (m Modal) Modal(attrlist ...templ.KeyValue[string, any]) {
+    {{
+        classes := []string{"modal"}
+        attrs := rxui.MergeClass(strings.Join(classes, " "), attrlist...)
+    }}
+
+    <dialog {attrs...}>
+        {children...}
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+}
+
+templ (m Modal) Content(attrlist ...templ.KeyValue[string, any]) {
+    {{
+        classes := []string{"modal-box"}
+        attrs := rxui.MergeClass(strings.Join(classes, " "), attrlist...)
+    }}
+
+    <div {attrs...}>
+        if m.WithCloseBtn {
+            <form method="dialog">
+                <button class="btn btn-xs btn-square btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+        }
+        {children...}
+    </div>
+}

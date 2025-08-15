@@ -9,26 +9,29 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
+	"fmt"
 	"github.com/sudeep9/rxui"
 	"strings"
 )
 
-type MenuSize string
+type TableSize string
 
 const (
-	MenuSizeXtraSmall MenuSize = "menu-xs"
-	MenuSizeSmall     MenuSize = "menu-sm"
-	MenuSizeMedium    MenuSize = "menu-md"
-	MenuSizeLarge     MenuSize = "menu-lg"
-	MenuSizeXtraLarge MenuSize = "menu-xl"
+	TableSizeXtraSmall TableSize = "table-xs"
+	TableSizeSmall     TableSize = "table-sm"
+	TableSizeMedium    TableSize = "table-md"
+	TableSizeLarge     TableSize = "table-lg"
+	TableSizeXtraLarge TableSize = "table-xl"
 )
 
-type MenuProps struct {
-	Horizontal bool
-	Size       MenuSize
+type Table struct {
+	Zebra      bool
+	Size       TableSize
+	Widths     []int
+	totalWidth int
 }
 
-func Menu(p MenuProps, attrlist ...templ.KeyValue[string, any]) templ.Component {
+func (t *Table) Table(attrlist ...templ.KeyValue[string, any]) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -50,22 +53,16 @@ func Menu(p MenuProps, attrlist ...templ.KeyValue[string, any]) templ.Component 
 		}
 		ctx = templ.ClearChildren(ctx)
 
-		classes := []string{"menu"}
-
-		if p.Horizontal {
-			classes = append(classes, "menu-horizontal")
-		} else {
-			classes = append(classes, "menu-vertical")
+		classes := []string{"table"}
+		if t.Zebra {
+			classes = append(classes, "table-zebra")
 		}
-
-		size := string(p.Size)
-
-		if size != "" {
-			classes = append(classes, size)
+		if t.Size != "" {
+			classes = append(classes, string(t.Size))
 		}
 
 		attrs := rxui.MergeClass(strings.Join(classes, " "), attrlist...)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<ul")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<table")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -81,7 +78,7 @@ func Menu(p MenuProps, attrlist ...templ.KeyValue[string, any]) templ.Component 
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</ul>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</table>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -89,7 +86,7 @@ func Menu(p MenuProps, attrlist ...templ.KeyValue[string, any]) templ.Component 
 	})
 }
 
-func MenuTitle() templ.Component {
+func (t *Table) Header(attrlist ...templ.KeyValue[string, any]) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -110,7 +107,17 @@ func MenuTitle() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<li class=\"menu-title\">")
+
+		attrs := templ.OrderedAttributes(attrlist)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<thead")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, attrs)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -118,7 +125,7 @@ func MenuTitle() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</li>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</thead>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -126,7 +133,7 @@ func MenuTitle() templ.Component {
 	})
 }
 
-func MenuItem(attrlist ...templ.KeyValue[string, any]) templ.Component {
+func (t *Table) TH(pos int, attrlist ...templ.KeyValue[string, any]) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -149,7 +156,20 @@ func MenuItem(attrlist ...templ.KeyValue[string, any]) templ.Component {
 		ctx = templ.ClearChildren(ctx)
 
 		attrs := templ.OrderedAttributes(attrlist)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<li")
+		if len(t.Widths) > 0 {
+			if t.totalWidth == 0 {
+				for _, n := range t.Widths {
+					t.totalWidth += n
+				}
+			}
+
+			if pos >= 0 && pos < len(t.Widths) {
+				n := t.Widths[pos]
+				widthStyle := fmt.Sprintf("width: calc(%d/%d * 100%%);", n, t.totalWidth)
+				attrs = append(attrs, templ.KeyValue[string, any]{Key: "style", Value: widthStyle})
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<th")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -157,7 +177,7 @@ func MenuItem(attrlist ...templ.KeyValue[string, any]) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, ">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -165,7 +185,7 @@ func MenuItem(attrlist ...templ.KeyValue[string, any]) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</li>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</th>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -173,7 +193,7 @@ func MenuItem(attrlist ...templ.KeyValue[string, any]) templ.Component {
 	})
 }
 
-func DropMenu(attrlist ...templ.KeyValue[string, any]) templ.Component {
+func (t *Table) Body(attrlist ...templ.KeyValue[string, any]) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -195,8 +215,8 @@ func DropMenu(attrlist ...templ.KeyValue[string, any]) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 
-		attrs := rxui.MergeClass("dropdown", attrlist...)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<li")
+		attrs := templ.OrderedAttributes(attrlist)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<tbody")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -204,7 +224,7 @@ func DropMenu(attrlist ...templ.KeyValue[string, any]) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, ">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -212,7 +232,7 @@ func DropMenu(attrlist ...templ.KeyValue[string, any]) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</li>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</tbody>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -220,25 +240,7 @@ func DropMenu(attrlist ...templ.KeyValue[string, any]) templ.Component {
 	})
 }
 
-type DropMenuNameProps struct {
-	ID    string
-	Class string
-}
-
-func (p DropMenuNameProps) ClassName() string {
-	classes := []string{}
-
-	if p.Class != "" {
-		classes = append(classes, p.Class)
-	}
-	if len(classes) == 0 {
-		return ""
-	}
-
-	return strings.Join(classes, " ")
-}
-
-func DropMenuName(attrlist ...templ.KeyValue[string, any]) templ.Component {
+func (t *Table) Row(attrlist ...templ.KeyValue[string, any]) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -261,7 +263,7 @@ func DropMenuName(attrlist ...templ.KeyValue[string, any]) templ.Component {
 		ctx = templ.ClearChildren(ctx)
 
 		attrs := templ.OrderedAttributes(attrlist)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<a tabindex=\"0\" role=\"button\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<tr")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -269,7 +271,7 @@ func DropMenuName(attrlist ...templ.KeyValue[string, any]) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, ">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -277,7 +279,7 @@ func DropMenuName(attrlist ...templ.KeyValue[string, any]) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</a>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</tr>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -285,24 +287,7 @@ func DropMenuName(attrlist ...templ.KeyValue[string, any]) templ.Component {
 	})
 }
 
-type DropMenuItemsProps struct {
-	ID    string
-	Class string
-}
-
-func (p DropMenuItemsProps) ClassName() string {
-	classes := []string{"dropdown-content"}
-
-	if p.Class != "" {
-		classes = append(classes, p.Class)
-	}
-	if len(classes) == 0 {
-		return ""
-	}
-	return strings.Join(classes, " ")
-}
-
-func DropMenuItems(attrlist ...templ.KeyValue[string, any]) templ.Component {
+func (t *Table) TD(attrlist ...templ.KeyValue[string, any]) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -324,8 +309,8 @@ func DropMenuItems(attrlist ...templ.KeyValue[string, any]) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 
-		attrs := rxui.MergeClass("dropdown-content", attrlist...)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<ul tabindex=\"0\"")
+		attrs := templ.OrderedAttributes(attrlist)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<td")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -333,7 +318,7 @@ func DropMenuItems(attrlist ...templ.KeyValue[string, any]) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, ">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -341,7 +326,7 @@ func DropMenuItems(attrlist ...templ.KeyValue[string, any]) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</ul>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</td>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -1,0 +1,29 @@
+package daisyui
+
+import (
+	"strings"
+    "github.com/sudeep9/rxui"
+)
+
+
+templ FieldSet(attrlist ...templ.KeyValue[string, any]) {
+	{{
+		classes := []string{"fieldset"}
+		attrs := rxui.MergeClass(strings.Join(classes, " "),  attrlist...)
+	}}
+
+	<fieldset {attrs...}>
+		{children...}
+	</fieldset>
+}
+
+templ Legend(attrlist ...templ.KeyValue[string, any]) {
+	{{
+		classes := []string{"fieldset-legend"}
+		attrs := rxui.MergeClass(strings.Join(classes, " "),  attrlist...)
+	}}
+
+	<legend {attrs...}>
+		{children...}
+	</legend>
+}

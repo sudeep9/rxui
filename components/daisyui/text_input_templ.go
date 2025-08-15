@@ -9,11 +9,13 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
+	"github.com/sudeep9/rxui"
 	"strings"
 )
 
 type TextInputColor string
 type TextInputSize string
+type TextInputType string
 
 const (
 	TextInputColorNeutral   TextInputColor = "input-neutral"
@@ -26,32 +28,29 @@ const (
 	TextInputSizeMedium    TextInputSize = "input-md"
 	TextInputSizeLarge     TextInputSize = "input-lg"
 	TextInputSizeXtraLarge TextInputSize = "input-xl"
+
+	TextInputTypeText          TextInputType = "text"
+	TextInputTypeEmail         TextInputType = "email"
+	TextInputTypePassword      TextInputType = "password"
+	TextInputTypeNumber        TextInputType = "number"
+	TextInputTypeTel           TextInputType = "tel"
+	TextInputTypeSearch        TextInputType = "search"
+	TextInputTypeDate          TextInputType = "date"
+	TextInputTypeDateTimeLocal TextInputType = "datetime-local"
+	TextInputTypeTime          TextInputType = "time"
+	TextInputTypeUrl           TextInputType = "url"
+	TextInputTypeColor         TextInputType = "color"
+	TextInputTypeWeek          TextInputType = "week"
+	TextInputTypeMonth         TextInputType = "month"
 )
 
 type TextInputProps struct {
-	ID    string
-	Class string
 	Color TextInputColor
 	Size  TextInputSize
-	Type  string
+	Type  TextInputType
 }
 
-func (p TextInputProps) ClassName() string {
-	classes := []string{"btn"}
-	if p.Color != "" {
-		classes = append(classes, string(p.Color))
-	}
-	if p.Size != "" {
-		classes = append(classes, string(p.Size))
-	}
-
-	if p.Class != "" {
-		classes = append(classes, p.Class)
-	}
-	return strings.Join(classes, " ")
-}
-
-func TextInput(p TextInputProps, attrs templ.Attributes) templ.Component {
+func TextInput(p TextInputProps, attrlist ...templ.KeyValue[string, any]) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -73,54 +72,21 @@ func TextInput(p TextInputProps, attrs templ.Attributes) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 
+		classes := []string{"input"}
+		if p.Color != "" {
+			classes = append(classes, string(p.Color))
+		}
+		if p.Size != "" {
+			classes = append(classes, string(p.Size))
+		}
+
 		if p.Type == "" {
-			p.Type = "text"
+			p.Type = TextInputTypeText
 		}
-		var templ_7745c5c3_Var2 = []any{p.ClassName()}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<input id=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(p.ID)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `text_input.templ`, Line: 53, Col: 16}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" type=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(p.Type)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `text_input.templ`, Line: 53, Col: 30}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" class=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var5 string
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var2).String())
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `text_input.templ`, Line: 1, Col: 0}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\"")
+
+		attrs := rxui.UseDefault(rxui.KV("type", p.Type), attrlist...)
+		attrs = rxui.MergeClass(strings.Join(classes, " "), attrs...)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<input")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -128,7 +94,7 @@ func TextInput(p TextInputProps, attrs templ.Attributes) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, ">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

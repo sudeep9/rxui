@@ -1,0 +1,90 @@
+package daisyui
+
+import (
+	"strings"
+	"github.com/sudeep9/rxui"
+)
+
+type TimelinePosition string
+
+const (
+    PositionStart  TimelinePosition = "timeline-start"
+    PositionMiddle TimelinePosition = "timeline-middle"
+    PositionEnd    TimelinePosition = "timeline-end"
+)
+
+type TimelineProps struct {
+    Vertical bool
+    IconAtStart bool
+    Compact bool
+}
+
+templ Timeline(p TimelineProps,attrlist ...templ.KeyValue[string, any]) {
+    {{
+		classes := []string{"timeline"}
+
+        if p.Vertical {
+            classes = append(classes, "timeline-vertical")
+        }
+
+        if p.IconAtStart {
+            classes = append(classes, "timeline-snap-icon")
+        }
+
+        if p.Compact {
+            classes = append(classes, "timeline-compact")
+        }
+
+		attrs := rxui.MergeClass(strings.Join(classes, " "),  attrlist...)
+	}}
+
+    <ul {attrs...}>
+        {children...}
+    </ul>
+}
+
+templ TimelineItem(attrlist ...templ.KeyValue[string, any]) {
+    {{
+        attrs := templ.OrderedAttributes(attrlist)
+    }}
+
+    <li {attrs...}>
+        {children...}
+    </li>
+
+}
+
+type TimelinePartProps struct {
+    Pos TimelinePosition
+	Box bool
+}
+
+templ TimelinePart(p TimelinePartProps, attrlist ...templ.KeyValue[string, any]) {
+    {{
+		classes := []string{}
+
+        if p.Pos == "" {
+            p.Pos = PositionStart
+        }
+
+        switch p.Pos {
+            case PositionStart:
+                classes = append(classes, "timeline-start")
+            case PositionMiddle:
+                classes = append(classes, "timeline-middle")
+            case PositionEnd:
+                classes = append(classes, "timeline-end")
+        }
+
+        if p.Box {
+            classes = append(classes, "timeline-box")
+        }
+
+        attrs := rxui.MergeClass(strings.Join(classes, " "),  attrlist...)
+    }}
+
+    <li {attrs...}>
+        {children...}
+    </li>
+}
+

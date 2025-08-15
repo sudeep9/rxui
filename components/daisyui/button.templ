@@ -2,6 +2,7 @@ package daisyui
 
 import (
 	"strings"
+	"github.com/sudeep9/rxui"
 )
 
 type BtnColor string
@@ -28,30 +29,25 @@ type BtnProps struct {
 	Square   bool
 }
 
-func (p BtnProps) ClassName() string {
-	classes := []string{"btn"}
-	if p.Color != "" {
-		classes = append(classes, string(p.Color))
-	}
-	if p.Size != "" {
-		classes = append(classes, string(p.Size))
-	}
-	if p.Disabled {
-		classes = append(classes, "btn-disabled")
-	}
-	if p.Square {
-		classes = append(classes, "btn-square")
-	}
+templ Button(p BtnProps, attrlist ...templ.KeyValue[string, any]) {
+	{{
+		classes := []string{"btn"}
+		if p.Color != "" {
+			classes = append(classes, string(p.Color))
+		}
+		if p.Size != "" {
+			classes = append(classes, string(p.Size))
+		}
+		if p.Disabled {
+			classes = append(classes, "btn-disabled")
+		}
+		if p.Square {
+			classes = append(classes, "btn-square")
+		}
 
-	if p.Class != "" {
-		classes = append(classes, p.Class)
-	}
-	return strings.Join(classes, " ")
-}
-
-
-templ Button(p BtnProps, attrs templ.Attributes) {
-	<button id={p.ID} class={p.ClassName()} {attrs...}>
+		attrs := rxui.MergeClass(strings.Join(classes, " "), attrlist...)
+	}}
+	<button {attrs...}>
 		{children...}
 	</button>
 }

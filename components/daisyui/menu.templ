@@ -36,7 +36,7 @@ templ Menu(p MenuProps, attrlist ...templ.KeyValue[string, any]) {
             classes = append(classes, size)
         }
 
-        attrs := rxui.ProcessAttrs(strings.Join(classes, " "), attrlist...)
+        attrs := rxui.MergeClass(strings.Join(classes, " "), attrlist...)
     }}
 
 
@@ -62,7 +62,7 @@ templ MenuItem(attrlist ...templ.KeyValue[string, any]) {
 
 templ DropMenu(attrlist ...templ.KeyValue[string, any]) {
     {{
-        attrs := rxui.ProcessAttrs("dropdown", attrlist...)
+        attrs := rxui.MergeClass("dropdown", attrlist...)
     }}
     <li {attrs...}>
         {children...}
@@ -113,7 +113,7 @@ func (p DropMenuItemsProps) ClassName() string {
 
 templ DropMenuItems(attrlist ...templ.KeyValue[string, any]) {
     {{
-        attrs := rxui.ProcessAttrs("dropdown-content", attrlist...)
+        attrs := rxui.MergeClass("dropdown-content", attrlist...)
     }}
     <ul tabindex="0" {attrs...}>
         {children...}

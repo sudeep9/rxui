@@ -41,6 +41,13 @@ func IsChecked() templ.KeyValue[string, any] {
 	}
 }
 
+func Disabled() templ.KeyValue[string, any] {
+	return templ.KeyValue[string, any]{
+		Key:   "disabled",
+		Value: true,
+	}
+}
+
 func KV(key string, value any) templ.KeyValue[string, any] {
 	return templ.KeyValue[string, any]{
 		Key:   key,
@@ -48,7 +55,7 @@ func KV(key string, value any) templ.KeyValue[string, any] {
 	}
 }
 
-func ProcessAttrs(builtinClass string, attrlist ...templ.KeyValue[string, any]) templ.OrderedAttributes {
+func MergeClass(builtinClass string, attrlist ...templ.KeyValue[string, any]) templ.OrderedAttributes {
 
 	for i := range attrlist {
 		if attrlist[i].Key == "class" {
@@ -64,4 +71,19 @@ func ProcessAttrs(builtinClass string, attrlist ...templ.KeyValue[string, any]) 
 	})
 
 	return attrs
+}
+
+func UseDefault(def templ.KeyValue[string, any], attrlist ...templ.KeyValue[string, any]) templ.OrderedAttributes {
+	found := false
+	for i := range attrlist {
+		if attrlist[i].Key == def.Key {
+			found = true
+			return templ.OrderedAttributes(attrlist)
+		}
+	}
+
+	if !found {
+		attrlist = append(attrlist, def)
+	}
+	return templ.OrderedAttributes(attrlist)
 }

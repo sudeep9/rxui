@@ -2,10 +2,12 @@ package daisyui
 
 import (
 	"strings"
+    "github.com/sudeep9/rxui"
 )
 
 type TextInputColor string
 type TextInputSize string
+type TextInputType string
 
 const (
 	TextInputColorNeutral   TextInputColor = "input-neutral"
@@ -18,37 +20,45 @@ const (
 	TextInputSizeMedium    TextInputSize = "input-md"
 	TextInputSizeLarge     TextInputSize = "input-lg"
 	TextInputSizeXtraLarge TextInputSize = "input-xl"
+
+	TextInputTypeText  TextInputType = "text"
+	TextInputTypeEmail TextInputType = "email"
+	TextInputTypePassword TextInputType = "password"
+	TextInputTypeNumber   TextInputType = "number"
+	TextInputTypeTel      TextInputType = "tel"
+	TextInputTypeSearch   TextInputType = "search"
+	TextInputTypeDate   TextInputType = "date"
+	TextInputTypeDateTimeLocal TextInputType = "datetime-local"
+	TextInputTypeTime TextInputType = "time"
+	TextInputTypeUrl  TextInputType = "url"
+	TextInputTypeColor TextInputType = "color"
+	TextInputTypeWeek  TextInputType = "week"
+	TextInputTypeMonth TextInputType = "month"
 )
 
 type TextInputProps struct {
-	ID       string
-	Class    string
 	Color    TextInputColor
 	Size     TextInputSize
-	Type string
+	Type     TextInputType
 }
 
-func (p TextInputProps) ClassName() string {
-	classes := []string{"btn"}
-	if p.Color != "" {
-		classes = append(classes, string(p.Color))
-	}
-	if p.Size != "" {
-		classes = append(classes, string(p.Size))
-	}
-
-	if p.Class != "" {
-		classes = append(classes, p.Class)
-	}
-	return strings.Join(classes, " ")
-}
-
-templ TextInput(p TextInputProps, attrs templ.Attributes) {
+templ TextInput(p TextInputProps, attrlist ...templ.KeyValue[string, any]) {
 	{{
-		if p.Type == "" {
-			p.Type = "text"
+		classes := []string{"input"}
+		if p.Color != "" {
+			classes = append(classes, string(p.Color))
 		}
+		if p.Size != "" {
+			classes = append(classes, string(p.Size))
+		}
+
+		if p.Type == "" {
+			p.Type = TextInputTypeText
+		}
+
+		attrs := rxui.UseDefault(rxui.KV("type", p.Type), attrlist...)
+		attrs = rxui.MergeClass(strings.Join(classes, " "),  attrs...)
 	}}
 
-	<input id={p.ID} type={p.Type} class={p.ClassName()} {attrs...} />
+	<input {attrs...} />
 }

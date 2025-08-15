@@ -13,28 +13,21 @@ import (
 	"strings"
 )
 
-type TabStyle string
-type TabSize string
+type TimelinePosition string
 
 const (
-	TabStyleLift TabStyle = "tabs-lift"
-	TabStyleBox  TabStyle = "tabs-box"
-	TabStyleLine TabStyle = "tabs-line"
-
-	TabSizeXtraSmall TabSize = "tabs-xs"
-	TabSizeSmall     TabSize = "tabs-sm"
-	TabSizeMedium    TabSize = "tabs-md"
-	TabSizeLarge     TabSize = "tabs-lg"
-	TabSizeXtraLarge TabSize = "tabs-xl"
+	PositionStart  TimelinePosition = "timeline-start"
+	PositionMiddle TimelinePosition = "timeline-middle"
+	PositionEnd    TimelinePosition = "timeline-end"
 )
 
-type Tabs struct {
-	Name     string
-	TabStyle TabStyle
-	Size     TabSize
+type TimelineProps struct {
+	Vertical    bool
+	IconAtStart bool
+	Compact     bool
 }
 
-func (t Tabs) Tabs(attrlist ...templ.KeyValue[string, any]) templ.Component {
+func Timeline(p TimelineProps, attrlist ...templ.KeyValue[string, any]) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -56,22 +49,22 @@ func (t Tabs) Tabs(attrlist ...templ.KeyValue[string, any]) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 
-		classes := []string{"tabs"}
+		classes := []string{"timeline"}
 
-		tabStyle := TabStyleLift
-		if string(t.TabStyle) != "" {
-			tabStyle = t.TabStyle
-			classes = append(classes, string(tabStyle))
+		if p.Vertical {
+			classes = append(classes, "timeline-vertical")
 		}
 
-		tabSize := TabSizeMedium
-		if string(t.Size) != "" {
-			tabSize = t.Size
-			classes = append(classes, string(tabSize))
+		if p.IconAtStart {
+			classes = append(classes, "timeline-snap-icon")
+		}
+
+		if p.Compact {
+			classes = append(classes, "timeline-compact")
 		}
 
 		attrs := rxui.MergeClass(strings.Join(classes, " "), attrlist...)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<ul")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -87,7 +80,7 @@ func (t Tabs) Tabs(attrlist ...templ.KeyValue[string, any]) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</ul>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -95,7 +88,7 @@ func (t Tabs) Tabs(attrlist ...templ.KeyValue[string, any]) templ.Component {
 	})
 }
 
-func (t Tabs) Tab(isChecked bool, attrlist ...templ.KeyValue[string, any]) templ.Component {
+func TimelineItem(attrlist ...templ.KeyValue[string, any]) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -117,12 +110,8 @@ func (t Tabs) Tab(isChecked bool, attrlist ...templ.KeyValue[string, any]) templ
 		}
 		ctx = templ.ClearChildren(ctx)
 
-		attrs := rxui.MergeClass("tab flex", attrlist...)
-		var inputAttrs templ.OrderedAttributes
-		if isChecked {
-			inputAttrs = append(inputAttrs, rxui.IsChecked())
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<label")
+		attrs := templ.OrderedAttributes(attrlist)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<li")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -130,28 +119,7 @@ func (t Tabs) Tab(isChecked bool, attrlist ...templ.KeyValue[string, any]) templ
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "><input type=\"radio\" name=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(t.Name)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `tab.templ`, Line: 61, Col: 40}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, inputAttrs)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, ">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -159,7 +127,7 @@ func (t Tabs) Tab(isChecked bool, attrlist ...templ.KeyValue[string, any]) templ
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</label>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</li>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -167,7 +135,12 @@ func (t Tabs) Tab(isChecked bool, attrlist ...templ.KeyValue[string, any]) templ
 	})
 }
 
-func (t Tabs) TabContent(attrlist ...templ.KeyValue[string, any]) templ.Component {
+type TimelinePartProps struct {
+	Pos TimelinePosition
+	Box bool
+}
+
+func TimelinePart(p TimelinePartProps, attrlist ...templ.KeyValue[string, any]) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -183,14 +156,33 @@ func (t Tabs) TabContent(attrlist ...templ.KeyValue[string, any]) templ.Componen
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var4 == nil {
-			templ_7745c5c3_Var4 = templ.NopComponent
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 
-		attrs := rxui.MergeClass("tab-content", attrlist...)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div")
+		classes := []string{}
+
+		if p.Pos == "" {
+			p.Pos = PositionStart
+		}
+
+		switch p.Pos {
+		case PositionStart:
+			classes = append(classes, "timeline-start")
+		case PositionMiddle:
+			classes = append(classes, "timeline-middle")
+		case PositionEnd:
+			classes = append(classes, "timeline-end")
+		}
+
+		if p.Box {
+			classes = append(classes, "timeline-box")
+		}
+
+		attrs := rxui.MergeClass(strings.Join(classes, " "), attrlist...)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<li")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -198,15 +190,15 @@ func (t Tabs) TabContent(attrlist ...templ.KeyValue[string, any]) templ.Componen
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, ">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ_7745c5c3_Var4.Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templ_7745c5c3_Var3.Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</li>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

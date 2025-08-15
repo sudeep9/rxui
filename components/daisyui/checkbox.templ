@@ -1,0 +1,43 @@
+package daisyui
+
+import (
+	"strings"
+    "github.com/sudeep9/rxui"
+)
+
+type CheckboxColor string
+type CheckboxSize string
+
+const (
+	CheckboxColorNeutral   CheckboxColor = "checkbox-neutral"
+	CheckboxColorPrimary   CheckboxColor = "checkbox-primary"
+	CheckboxColorSecondary CheckboxColor = "checkbox-secondary"
+	CheckboxColorError     CheckboxColor = "checkbox-error"
+
+	CheckboxSizeXtraSmall CheckboxSize = "checkbox-xs"
+	CheckboxSizeSmall     CheckboxSize = "checkbox-sm"
+	CheckboxSizeMedium    CheckboxSize = "checkbox-md"
+	CheckboxSizeLarge     CheckboxSize = "checkbox-lg"
+	CheckboxSizeXtraLarge CheckboxSize = "checkbox-xl"
+)
+
+type CheckboxProps struct {
+	Color    CheckboxColor
+	Size     CheckboxSize
+}
+
+templ Checkbox(p CheckboxProps, attrlist ...templ.KeyValue[string, any]) {
+	{{
+		classes := []string{"checkbox"}
+		if p.Color != "" {
+			classes = append(classes, string(p.Color))
+		}
+		if p.Size != "" {
+			classes = append(classes, string(p.Size))
+		}
+
+		attrs := rxui.MergeClass(strings.Join(classes, " "),  attrlist...)
+	}}
+
+	<input type="checkbox" {attrs...} />
+}

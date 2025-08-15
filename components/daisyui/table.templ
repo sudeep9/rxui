@@ -1,0 +1,105 @@
+package daisyui
+
+import (
+    "fmt"
+	"strings"
+	"github.com/sudeep9/rxui"
+)
+
+type TableSize string
+
+const (
+	TableSizeXtraSmall TableSize = "table-xs"
+	TableSizeSmall     TableSize = "table-sm"
+	TableSizeMedium    TableSize = "table-md"
+	TableSizeLarge     TableSize = "table-lg"
+	TableSizeXtraLarge TableSize = "table-xl"
+)
+
+type Table struct {
+    Zebra bool
+    Size  TableSize
+    Widths []int
+    totalWidth int
+}
+
+templ (t *Table) Table(attrlist ...templ.KeyValue[string, any]) {
+    {{
+        classes := []string{"table"}
+        if t.Zebra {
+            classes = append(classes, "table-zebra")
+        }
+        if t.Size != "" {
+            classes = append(classes, string(t.Size))
+        }
+        
+        attrs := rxui.MergeClass(strings.Join(classes, " "), attrlist...)
+    }}
+
+    <table {attrs...}>
+        {children...}
+    </table>
+}
+
+templ (t *Table) Header(attrlist ...templ.KeyValue[string, any]) {
+    {{
+        attrs := templ.OrderedAttributes(attrlist)
+    }}
+
+    <thead {attrs...}>
+        {children...}
+    </thead>
+}
+
+templ (t *Table) TH(pos int, attrlist ...templ.KeyValue[string, any]) {
+    {{
+        attrs := templ.OrderedAttributes(attrlist)
+        if len(t.Widths) > 0 {
+            if t.totalWidth == 0 {
+                for _, n := range t.Widths {
+                    t.totalWidth += n
+                }
+            }
+
+            if pos >= 0 && pos < len(t.Widths) {
+                n := t.Widths[pos]
+                widthStyle := fmt.Sprintf("width: calc(%d/%d * 100%%);", n, t.totalWidth)
+                attrs = append(attrs, templ.KeyValue[string, any]{Key: "style", Value: widthStyle})
+            }
+        }
+    }}
+
+    <th {attrs...}>
+        {children...}
+    </th>
+}
+
+templ (t *Table) Body(attrlist ...templ.KeyValue[string, any]) {
+    {{
+        attrs := templ.OrderedAttributes(attrlist)
+    }}
+
+    <tbody {attrs...}>
+        {children...}
+    </tbody>
+}
+
+templ (t *Table) Row(attrlist ...templ.KeyValue[string, any]) {
+    {{
+        attrs := templ.OrderedAttributes(attrlist)
+    }}
+
+    <tr {attrs...}>
+        {children...}
+    </tr>
+}
+
+templ (t *Table) TD(attrlist ...templ.KeyValue[string, any]) {
+    {{
+        attrs := templ.OrderedAttributes(attrlist)
+    }}
+
+    <td {attrs...}>
+        {children...}
+    </td>
+}

@@ -1,12 +1,23 @@
 package pages
 
 import (
+    "fmt"
 	"github.com/sudeep9/rxui"
 	"github.com/sudeep9/rxui/components/daisyui"
 	"github.com/sudeep9/rxui/components/icons"
 )
 
+var btnId int64
+
+var PatientsPageInst = PatientsPage{
+    Tabs: daisyui.Tabs{
+        Name:     "patients_content_tab",
+        TabStyle: daisyui.TabStyleLift,
+    },
+}
+
 type PatientsPage struct {
+   Tabs daisyui.Tabs 
 }
 
 templ (p PatientsPage) Nav() {
@@ -22,60 +33,250 @@ templ (p PatientsPage) Page() {
 		<div>
             @p.Nav()
 		</div>
-		<div class="p-1 h-full">
+		<div class="p-1 flex flex-col space-y-2 h-full">
+            <div class="flex space-x-2">
+                @daisyui.Button(daisyui.BtnProps{
+                    Color:  daisyui.BtnColorPrimary,
+                    Size:  daisyui.BtnSizeXtraSmall,
+                }, rxui.KV("data-on-click", "modal0.showModal()")) {
+                    Show Modal
+                }
+                @daisyui.Button(daisyui.BtnProps{
+                    Color:  daisyui.BtnColorPrimary,
+                    Size:  daisyui.BtnSizeXtraSmall,
+                }, rxui.KV("data-on-click", "@post('/ctrl/patient')")) {
+                    Add Patient
+                }
+                {{
+                    modal := daisyui.Modal{
+                        WithCloseBtn: true,
+                    }
+                }}
+                @modal.Modal(rxui.ID("modal0")) {
+                    @modal.Content() {
+                    <h2>Modal Title</h2>
+                        <p>This is a modal content.</p>
+                    }
+                }
+            </div>
             @p.Content()
 		</div>
     }
 }
 
 templ (p PatientsPage) Content() {
-    {{
-        tab := daisyui.Tabs{
-            Name:     "patients_content_tab",
-            TabStyle: daisyui.TabStyleLift,
+    @p.Tabs.Tabs(rxui.Class("rx-tab-container overflow-auto h-full"), rxui.ID("patientsTab")) {
+        @p.Tab("List", false) {
+            @p.Tabs.TabContent() {
+                <div class="w-150">
+                @p.List()
+                </div>
+            }
         }
-    }}
-    @tab.Tabs(rxui.Class("rx-tab-container h-full"), rxui.ID("patientsTab")) {
-        @tab.Tab(true) {
-            List
-        }
-        @tab.TabContent() {
-            @p.List()
+        @p.Tab("Rx", true) {
+            @p.Tabs.TabContent() {
+                @p.RxForm()
+            }
         }
     }
+}
 
+templ (p PatientsPage) RxForm() {
+    <form class="p-1 rx-form flex flex-col space-y-2 w-250">
+        @p.RxBioForm()
+        @p.RxMedForm()
+    </form>
+}
 
+templ (p PatientsPage) RxMedForm() {
+    {{
+        t := daisyui.Table{
+            Widths:[]int{9, 2, 2, 2, 9},
+        }
+    }}
+
+    @t.Table() {
+        @t.Header() {
+            @t.Row() {
+                @t.TH(0) {
+                    Medicine
+                }
+                @t.TH(1) {
+                    Type
+                }
+                @t.TH(2) {
+                    Dosage
+                }
+                @t.TH(3) {
+                    Duration
+                }
+                @t.TH(4) {
+                    Notes
+                }
+            }
+        }
+
+        @t.Body() {
+            @t.Row() {
+                @t.TD() {
+                    <input type="text" class="input rx-input" placeholder="Medication"/>
+                }
+                @t.TD() {
+                    <select class="select rx-input" placeholder="Type">
+                        <option value="tablet">Tablet</option>
+                        <option value="syrup">Syrup</option>
+                        <option value="injection">Injection</option>
+                    </select>
+                }
+                @t.TD() {
+                    <input type="text" class="input rx-input" placeholder="Dosage"/>
+                }
+                @t.TD() {
+                    <input type="text" class="input rx-input" placeholder="Duration"/>
+                }
+                @t.TD() {
+                    <input type="text" class="input rx-input" placeholder="Notes"/>
+                }
+            }
+        }
+    }
+}
+
+templ (p PatientsPage) RxBioForm() {
+    {{
+        t := daisyui.Table{
+            Widths:[]int{1, 1, 2, 2, 10},
+        }
+    }}
+
+    @t.Table() {
+        @t.Header() {
+            @t.Row() {
+                @t.TH(0) {
+                    Height
+                }
+                @t.TH(1) {
+                    Weight
+                }
+                @t.TH(2) {
+                    Temperature
+                }
+                @t.TH(3) {
+                    BP
+                }
+                @t.TH(4) {
+                    Notes
+                }
+            }
+        }
+
+        @t.Body() {
+            @t.Row() {
+                @t.TD() {
+                    <input type="text" class="input rx-input" placeholder="Height"/>
+                }
+                @t.TD() {
+                    <input type="text" class="input rx-input" placeholder="Weight"/>
+                }
+                @t.TD() {
+                    <input type="text" class="input rx-input" placeholder="Temperature"/>
+                }
+                @t.TD() {
+                    <input type="text" class="input rx-input" placeholder="BP"/>
+                }
+                @t.TD() {
+                    <input type="text" class="input rx-input" placeholder="Notes"/>
+                }
+            }
+        }
+    }
+}
+
+templ (p PatientsPage) Tab(name string, active bool) {
+    @p.Tabs.Tab(active) {
+        {name}
+    }
+    {children...}
+}
+
+templ (p PatientsPage) NewTab() {
+    {{
+        tabId := btnId
+        btnId++
+
+        tabNameId := fmt.Sprintf("tab_%d_name", tabId)
+        tabContentId := fmt.Sprintf("tab_%d_content", tabId)
+
+        //closeAction := fmt.Sprintf("console.log(el.target);window.%s.remove(); window.%s.remove();", tabNameId, tabContentId)
+        closeAction := fmt.Sprintf("if (evt.target.closest('[role=close]')) {window.%s.remove(); window.%s.remove()}", tabNameId, tabContentId)
+    }}
+
+    @p.Tabs.Tab(true, rxui.ID(tabNameId)) {
+        <div class="flex items-center justify-between space-x-3 z-1">
+            <span>New Tab {tabId}</span>
+            <button class="btn btn-square h-5 w-4" role="close" data-on-click={closeAction}>
+                @icons.Close()
+            </button>
+        </div>
+    }
+
+    @p.Tabs.TabContent(rxui.ID(tabContentId)) {
+        Tab content {tabId}
+    }
 }
 
 templ (p PatientsPage) List() {
-    <table class="table table-zebra table-sm">
-        <thead>
-            <tr>
-                <th>Actions</th>
-                <th>Name</th>
-                <th>DOB</th>
-                <th>Addr</th>
-            </tr>
-        </thead>
-        <tbody>
-            @p.PatientRow("John Wick", "01-Jan-1980", "10 Downing Street")
-            @p.PatientRow("Tony Stark", "10-Mar-1975", "10 Janpath Street")
-            @p.PatientRow("Bruce Wayne", "19-Feb-1975", "1007 Mountain Drive")
-            @p.PatientRow("Clark Kent", "18-Apr-1975", "344 Clinton Street")
-        </tbody>
-    </table>
+    {{
+        t := daisyui.Table{
+            Zebra: true,
+            Size:  daisyui.TableSizeSmall,
+            Widths:[]int{1, 8, 4, 10},
+        }
+    }}
+
+    @t.Table() {
+        @t.Header() {
+            @t.Row() {
+                @t.TH(0) {
+                    Actions
+                }
+                @t.TH(1) {
+                    Name
+                }
+                @t.TH(2) {
+                    DOB
+                }
+                @t.TH(3) {
+                    Addr
+                }
+            }
+        }
+
+        @t.Body() {
+            @p.PatientRow(&t, "John Wick", "01-Jan-1980", "10 Downing Street")
+            @p.PatientRow(&t, "Tony Stark", "10-Mar-1975", "10 Janpath Street")
+            @p.PatientRow(&t, "Bruce Wayne", "19-Feb-1975", "1007 Mountain Drive")
+            @p.PatientRow(&t, "Clark Kent", "18-Apr-1975", "344 Clinton Street")
+        }
+    }
 }
 
-templ (p PatientsPage) PatientRow(name string, dob string, addr string) {
-    <tr>
-        <td class="flex items-center gap-x-1">
+templ (p PatientsPage) PatientRow(t *daisyui.Table, name string, dob string, addr string) {
+    @t.Row() {
+        @t.TD(rxui.Class("flex items-center gap-x-1")) {
             <button class="btn btn-square h-4 w-4">
                 @icons.Edit()
             </button>
             <input type="checkbox" class="checkbox h-4 w-4" />
-        </td>
-        <td>{name}</td>
-        <td>{dob}</td>
-        <td>{addr}</td>
-    </tr>
+        }
+        @t.TD() {
+            {name}
+        }
+        @t.TD() {
+            {dob}
+        }
+        @t.TD() {
+            {addr}
+        }
+    }
 }
