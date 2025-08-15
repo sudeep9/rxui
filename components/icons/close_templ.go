@@ -30,7 +30,7 @@ func Close(attrlist ...templ.KeyValue[string, any]) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 
-		attrs := iconAttrs(attrlist...)
+		attrs := IconAttrs(attrlist...)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 640 640\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

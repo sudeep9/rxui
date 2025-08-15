@@ -4,7 +4,7 @@ import (
 	"github.com/a-h/templ"
 )
 
-func iconAttrs(attrlist ...templ.KeyValue[string, any]) templ.OrderedAttributes {
+func IconAttrs(attrlist ...templ.KeyValue[string, any]) templ.OrderedAttributes {
 	fillFound := false
 	for i := range attrlist {
 		if attrlist[i].Key == "fill" {
