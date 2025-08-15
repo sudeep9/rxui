@@ -12,6 +12,7 @@ const (
 	BtnColorNeutral   BtnColor = "btn-neutral"
 	BtnColorPrimary   BtnColor = "btn-primary"
 	BtnColorSecondary BtnColor = "btn-secondary"
+	BtnColorInfo      BtnColor = "btn-info"
 
 	BtnSizeXtraSmall BtnSize = "btn-xs"
 	BtnSizeSmall     BtnSize = "btn-sm"
@@ -27,9 +28,10 @@ type BtnProps struct {
 	Size     BtnSize
 	Disabled bool
 	Square   bool
+	Outline bool
 }
 
-templ Button(p BtnProps, attrlist ...templ.KeyValue[string, any]) {
+templ Btn(p BtnProps, attrlist ...templ.KeyValue[string, any]) {
 	{{
 		classes := []string{"btn"}
 		if p.Color != "" {
@@ -43,6 +45,9 @@ templ Button(p BtnProps, attrlist ...templ.KeyValue[string, any]) {
 		}
 		if p.Square {
 			classes = append(classes, "btn-square")
+		}
+		if p.Outline {
+			classes = append(classes, "btn-outline")
 		}
 
 		attrs := rxui.MergeClass(strings.Join(classes, " "), attrlist...)

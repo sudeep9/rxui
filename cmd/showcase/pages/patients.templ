@@ -35,13 +35,13 @@ templ (p PatientsPage) Page() {
 		</div>
 		<div class="p-1 flex flex-col space-y-2 h-full">
             <div class="flex space-x-2">
-                @daisyui.Button(daisyui.BtnProps{
+                @daisyui.Btn(daisyui.BtnProps{
                     Color:  daisyui.BtnColorPrimary,
                     Size:  daisyui.BtnSizeXtraSmall,
                 }, rxui.KV("data-on-click", "modal0.showModal()")) {
                     Show Modal
                 }
-                @daisyui.Button(daisyui.BtnProps{
+                @daisyui.Btn(daisyui.BtnProps{
                     Color:  daisyui.BtnColorPrimary,
                     Size:  daisyui.BtnSizeXtraSmall,
                 }, rxui.KV("data-on-click", "@post('/ctrl/patient')")) {
