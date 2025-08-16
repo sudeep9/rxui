@@ -55,6 +55,20 @@ func KV(key string, value any) templ.KeyValue[string, any] {
 	}
 }
 
+func For(id string) templ.KeyValue[string, any] {
+	return templ.KeyValue[string, any]{
+		Key:   "for",
+		Value: id,
+	}
+}
+
+func Name(name string) templ.KeyValue[string, any] {
+	return templ.KeyValue[string, any]{
+		Key:   "name",
+		Value: name,
+	}
+}
+
 func MergeClass(builtinClass string, attrlist ...templ.KeyValue[string, any]) templ.OrderedAttributes {
 
 	for i := range attrlist {
