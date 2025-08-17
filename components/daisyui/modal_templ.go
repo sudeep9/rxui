@@ -5,12 +5,12 @@ package daisyui
 
 //lint:file-ignore SA4006 This context is only used if a nested component is present.
 
-import (
-	"strings"
+import "github.com/a-h/templ"
+import templruntime "github.com/a-h/templ/runtime"
 
-	"github.com/a-h/templ"
-	templruntime "github.com/a-h/templ/runtime"
+import (
 	"github.com/sudeep9/rxui"
+	"strings"
 )
 
 type ModalPosition string
@@ -24,7 +24,8 @@ const (
 )
 
 type Modal struct {
-	WithCloseBtn bool
+	WithCloseBtn  bool
+	ModalPosition ModalPosition
 }
 
 func (m Modal) Modal(attrlist ...templ.KeyValue[string, any]) templ.Component {
@@ -50,6 +51,9 @@ func (m Modal) Modal(attrlist ...templ.KeyValue[string, any]) templ.Component {
 		ctx = templ.ClearChildren(ctx)
 
 		classes := []string{"modal"}
+		if m.ModalPosition != "" {
+			classes = append(classes, string(m.ModalPosition))
+		}
 		attrs := rxui.MergeClass(strings.Join(classes, " "), attrlist...)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<dialog")
 		if templ_7745c5c3_Err != nil {
