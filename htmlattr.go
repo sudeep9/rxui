@@ -69,6 +69,13 @@ func Name(name string) templ.KeyValue[string, any] {
 	}
 }
 
+func Required() templ.KeyValue[string, any] {
+	return templ.KeyValue[string, any]{
+		Key:   "required",
+		Value: true,
+	}
+}
+
 func MergeClass(builtinClass string, attrlist ...templ.KeyValue[string, any]) templ.OrderedAttributes {
 
 	for i := range attrlist {
