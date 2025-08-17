@@ -1,0 +1,50 @@
+package daisyui
+
+import (
+    "strings"
+    "github.com/sudeep9/rxui"
+)
+
+type AlertSeverity string
+type AlertStyle string
+type AlertDirection string
+
+const (
+    AlertSeverityInfo    AlertSeverity = "alert-info"
+    AlertSeveritySuccess AlertSeverity = "alert-success"
+    AlertSeverityWarning AlertSeverity = "alert-warning"
+    AlertSeverityError   AlertSeverity = "alert-error"
+
+    AlertStyleDash AlertStyle = "alert-dash"
+    AlertStyleSoft AlertStyle = "alert-soft"
+
+    AlertDirectionHorizontal AlertDirection = "alert-horizontal"
+    AlertDirectionVertical   AlertDirection = "alert-vertical"
+)
+
+type AlertProps struct {
+    Severity AlertSeverity
+    Style    AlertStyle
+    Direction AlertDirection
+}
+
+templ Alert(props AlertProps, attrlist ...templ.KeyValue[string, any]) {
+    {{
+        classes := []string{"alert"}
+        if props.Severity != "" {
+            classes = append(classes, string(props.Severity))
+        }
+
+        if props.Style != "" {
+            classes = append(classes, string(props.Style))
+        }
+
+        if props.Direction != "" {
+            classes = append(classes, string(props.Direction))
+        }
+        attrs := rxui.MergeClass(strings.Join(classes, " "), attrlist...)
+    }}
+    <div {attrs...}>
+        {children...}
+    </div>
+}

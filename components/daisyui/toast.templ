@@ -1,0 +1,25 @@
+package daisyui
+
+import (
+    "github.com/sudeep9/rxui"
+)
+
+type ToastPosition string
+
+const (
+    ToastPositionStart = "toast-start"
+    ToastPositionEnd   = "toast-end"
+    ToastPositionTop    = "toast-top"
+    ToastPositionBottom = "toast-bottom"
+    ToastPositionMiddle = "toast-middle"
+    ToastPositionCenter = "toast-center"
+)
+
+templ Toast(attrlist ...templ.KeyValue[string, any]) {
+    {{
+        attrs := rxui.MergeClass("toast", attrlist...)
+    }}
+    <div {attrs...}>
+        {children...}
+    </div>
+}
