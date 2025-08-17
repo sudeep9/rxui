@@ -5,12 +5,22 @@ package daisyui
 
 //lint:file-ignore SA4006 This context is only used if a nested component is present.
 
-import "github.com/a-h/templ"
-import templruntime "github.com/a-h/templ/runtime"
-
 import (
-	"github.com/sudeep9/rxui"
 	"strings"
+
+	"github.com/a-h/templ"
+	templruntime "github.com/a-h/templ/runtime"
+	"github.com/sudeep9/rxui"
+)
+
+type ModalPosition string
+
+const (
+	ModalPositionTop    ModalPosition = "modal-top"
+	ModalPositionBottom ModalPosition = "modal-bottom"
+	ModalPositionMiddle ModalPosition = "modal-middle"
+	ModalPositionStart  ModalPosition = "modal-start"
+	ModalPositionEnd    ModalPosition = "modal-end"
 )
 
 type Modal struct {

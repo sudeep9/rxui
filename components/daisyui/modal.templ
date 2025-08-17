@@ -5,13 +5,27 @@ import (
 	"github.com/sudeep9/rxui"
 )
 
+type ModalPosition string
+
+const (
+	ModalPositionTop    ModalPosition = "modal-top"
+	ModalPositionBottom ModalPosition = "modal-bottom"
+	ModalPositionMiddle ModalPosition = "modal-middle"
+	ModalPositionStart  ModalPosition = "modal-start"
+	ModalPositionEnd    ModalPosition = "modal-end"
+)
+
 type Modal struct {
-    WithCloseBtn bool
+	WithCloseBtn bool
+	ModalPosition ModalPosition
 }
 
 templ (m Modal) Modal(attrlist ...templ.KeyValue[string, any]) {
     {{
         classes := []string{"modal"}
+        if m.ModalPosition != "" {
+            classes = append(classes, string(m.ModalPosition))
+        }
         attrs := rxui.MergeClass(strings.Join(classes, " "), attrlist...)
     }}
 
